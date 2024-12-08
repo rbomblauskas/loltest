@@ -1,0 +1,103 @@
+<html><head><base href="https://source.unsplash.com"/>
+<style>
+.bouncing-image {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    animation: bounce 2s infinite;
+    opacity: 0;
+    transition: opacity 0.5s;
+    background-size: cover;
+    background-position: center;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-100px);
+    }
+}
+
+body {
+    background: #f0f0f0;
+    overflow: hidden;
+    margin: 0;
+    min-height: 100vh;
+}
+</style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+<script>
+const sound = new Howl({
+    src: ['VINE.mp3'],
+    volume: 0.5,
+    loop: true
+});
+
+function createBouncingImage() {
+    const img = document.createElement('div');
+    img.className = 'bouncing-image';
+    img.style.backgroundImage = `url('japonas.jpg')`;
+    img.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+    img.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    img.style.animationDelay = Math.random() * 2 + 's';
+    document.body.appendChild(img);
+    
+    setTimeout(() => {
+        img.style.opacity = '1';
+    }, 100);
+}
+
+// Start automatically when page loads
+window.addEventListener('load', function() {
+    sound.play();
+    
+    // Create images with slight delay between each
+    for(let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            createBouncingImage();
+        }, i * 300);
+    }
+});
+
+// Add confetti effect
+function createConfetti() {
+    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeead'];
+    const confetti = document.createElement('div');
+    confetti.style.position = 'absolute';
+    confetti.style.width = '10px';
+    confetti.style.height = '10px';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.top = '-10px';
+    confetti.style.borderRadius = '50%';
+    confetti.style.animation = 'fall 3s linear forwards';
+    document.body.appendChild(confetti);
+
+    setTimeout(() => {
+        document.body.removeChild(confetti);
+    }, 3000);
+}
+
+const confettiStyle = document.createElement('style');
+confettiStyle.textContent = `
+    @keyframes fall {
+        to {
+            transform: translateY(${window.innerHeight + 10}px) rotate(360deg);
+        }
+    }
+`;
+document.head.appendChild(confettiStyle);
+
+// Add periodic confetti
+setInterval(() => {
+    if(document.querySelector('.bouncing-image')) {
+        createConfetti();
+    }
+}, 200);
+</script>
+</body></html>
